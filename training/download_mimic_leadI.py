@@ -22,6 +22,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 BASE = "https://physionet.org/files/mimic-iv-ecg/1.0/"
 
 def get(url, tries=4):
+    # Downloads one file from PhysioNet, retrying up to 4 times with a short wait if it fails.
     for i in range(tries):
         try:
             r = requests.get(url, timeout=60)
@@ -33,6 +34,8 @@ def get(url, tries=4):
             time.sleep(2 * (i + 1))
 
 def lead_one(path):
+    # Each MIMIC ECG is stored as two files: .hea (description) and .dat (the numbers).
+    # We download both to a temporary folder, read ONLY lead I, and the folder is deleted after.
     """path like files/p1000/p10000032/s40689238/40689238 -> Lead I array or None."""
     with tempfile.TemporaryDirectory() as d:
         name = os.path.basename(path)
@@ -68,6 +71,8 @@ def main():
             f.write(data)
     rl = pd.read_csv(rl_path)
 
+    # record_list.csv lists every ECG and whose it is. Keep only patients with 2+ ECGs,
+    # then randomly pick --patients of them (seed 42, so the same people each time).
     counts = rl.subject_id.value_counts()
     eligible = counts[counts >= 2].index.values
     rng = np.random.default_rng(a.seed)
@@ -77,6 +82,7 @@ def main():
            .groupby("subject_id").head(a.max_per_patient))
     print(f"{len(eligible):,} patients have 2+ ECGs; using {len(pick):,} patients, {len(sub):,} ECGs")
 
+    # Skip ECGs already saved in parts/ (this is what makes stopping and restarting safe).
     todo = [r for r in sub.itertuples()
             if not os.path.exists(os.path.join(a.out, "parts", f"{r.study_id}.npy"))]
     print(f"{len(sub) - len(todo):,} already done, {len(todo):,} to download")
@@ -86,6 +92,7 @@ def main():
         np.save(os.path.join(a.out, "parts", f"{r.study_id}.npy"),
                 x if x is not None else np.zeros(0, np.float16))
     failed = 0
+    # Download 8 ECGs at a time in parallel to go faster.
     with ThreadPoolExecutor(a.workers) as ex:
         futs = [ex.submit(work, r) for r in todo]
         for i, f in enumerate(as_completed(futs), 1):
@@ -96,6 +103,7 @@ def main():
             if i % 200 == 0 or i == len(futs):
                 print(f"  {i:,}/{len(futs):,} done, {failed} failed")
 
+    # Bundle all saved ECGs into one compressed file with each ECG's patient ID.
     sig, keep = [], []
     for r in sub.itertuples():
         p = os.path.join(a.out, "parts", f"{r.study_id}.npy")

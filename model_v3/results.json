@@ -1,0 +1,27 @@
+{
+ "locked_test_stjude_48_patients": {
+  "note": "hospital vs Apple Watch; same 48 patients as v1 and v2",
+  "submission_pipeline_middle_10s": {"auroc": 0.984, "top1": 0.792},
+  "experiment_table_all_3_watch_windows": {
+   "cnn_1_seed": {"auroc": 0.971, "top1": 0.479},
+   "cnn_3_seeds": {"auroc": 0.978, "top1": 0.646},
+   "feature_nn_joint": {"auroc": 0.932, "top1": 0.521},
+   "ensemble_w0.8": {"auroc": 0.980, "top1": 0.688}
+  }
+ },
+ "locked_test_mimic_200_patients": {
+  "note": "hospital vs hospital",
+  "cnn_1_seed": {"auroc": 0.975, "top1": 0.615},
+  "cnn_3_seeds": {"auroc": 0.978, "top1": 0.645},
+  "feature_nn_joint": {"auroc": 0.958, "top1": 0.520},
+  "ensemble_w0.8": {"auroc": 0.981, "top1": 0.685}
+ },
+ "practice_test_windowing_39_patients": {
+  "middle_10s": {"auroc": 0.972, "top1": 0.949},
+  "first_10s": {"auroc": 0.971, "top1": 0.897},
+  "last_10s": {"auroc": 0.967, "top1": 0.897},
+  "three_windows_averaged": {"auroc": 0.972, "top1": 0.923}
+ },
+ "training": {"mimic_patients": 10000, "mimic_ecgs": 37237, "stjude_train_patients": 195,
+              "cnn_seeds": 3, "cnn_rounds": 100, "feature_nn": "joint", "cnn_weight": 0.8}
+}

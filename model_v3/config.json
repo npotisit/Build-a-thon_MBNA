@@ -1,0 +1,6 @@
+{
+ "feature_nn": "feature_nn.h5",
+ "cnns": ["siamese_cnn_1.h5", "siamese_cnn_2.h5", "siamese_cnn_3.h5"],
+ "w": 0.8,
+ "windows": "middle"
+}
