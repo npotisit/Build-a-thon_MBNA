@@ -1,0 +1,13 @@
+# Tested with Python 3.13
+# Needed to run the model (score_pair.py)
+numpy==2.4.6
+scipy==1.18.1
+tensorflow==2.21.0
+keras==3.15.1
+h5py==3.14.0
+
+# Needed only for training (training/ folder)
+pandas
+scikit-learn==1.9.1
+wfdb==4.3.1
+requests

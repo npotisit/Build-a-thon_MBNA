@@ -1,0 +1,14 @@
+# data (never commit)
+*.npz
+*.npy
+*.csv
+SJLIFE-data/
+mimic_leadI/
+
+# python
+__pycache__/
+*.pyc
+
+# local backups and scratch
+v1_backup/
+model_retrained/
