@@ -13,8 +13,8 @@ Build a model that takes two Lead I ECG recordings and returns a similarity scor
 | Name | Role |
 |---|---|
 | Brian Mejia-Lopez | |
-| | |
-| | |
+| Nathan Potisit | |
+| D'Marley Grant | |
 | | |
 
 ## Repository layout
